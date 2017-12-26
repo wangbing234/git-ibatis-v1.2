@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="TenantPublishDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="tenantPublishMap" type="com.block.module.font.tenant.tenantpublish.entity.TenantPublish">
+        	<result property="id" column="id"/>
+        	<result property="status" column="status"/>
+        	<result property="address" column="address"/>
+        	<result property="number" column="number"/>
+        	<result property="serviceType" column="service_type"/>
+        	<result property="price" column="price"/>
+        	<result property="deadline" column="deadline"/>
+        	<result property="createtime" column="createtime"/>
+        	<result property="scopeId" column="scope_id"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="tenantPublishColumns">
+	    <![CDATA[
+			id,status,address,number,service_type,price,deadline,createtime,scope_id
+	    ]]>
+	</sql>
+</mapper>
+

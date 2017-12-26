@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="TenantScopeDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="tenantScopeMap" type="com.block.module.font.tenant.tenantscope.entity.TenantScope">
+        	<result property="id" column="id"/>
+        	<result property="userId" column="user_id"/>
+        	<result property="scopeId" column="scope_id"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="tenantScopeColumns">
+	    <![CDATA[
+			id,user_id,scope_id
+	    ]]>
+	</sql>
+</mapper>
+

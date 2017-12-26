@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ResoucesDaoSystem">
+
+	<!-- 查询权限菜单  1改为 #{id}-->
+	<select id="selectAuthMenus" resultType="com.block.core.module.resouces.entity.Resouces" parameterType="hashmap" >
+		select * from s_resouces r where  r.id  in 
+			(select p.mid from s_privilege p,s_role ro,s_user u where u.rid=ro.id and p.rid=ro.id and u.id=#{id})
+			 and r.valid=1
+			<if test="type!=null and type!=''">
+				r.type=#{type}
+			</if>
+			<if test="pid!=null and pid!=''">
+				r.pid=#{pid}
+			</if>
+			 order by pid ASC,order_num ASC
+	</select>
+	
+</mapper>

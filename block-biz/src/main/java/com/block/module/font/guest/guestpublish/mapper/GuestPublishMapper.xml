@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="GuestPublishDao">
+
+	<select id="selectTenantCount" parameterType="com.block.module.font.guest.guestpublish.web.TenantFilterParm"
+		resultType="java.lang.Integer">
+			select count(1) as count from (
+							select b.*, w.times,w.credit, w.opinion,
+						sqrt((((#{longitude}-b.longitude)*PI()*12656*cos(((#{latitude}+b.latitude)/2)*PI()/180)/180) * 
+						((#{longitude}-b.longitude)*PI()*12656*cos (((#{latitude}+b.latitude)/2)*PI()/180)/180) ) + 
+						( ((#{latitude}-b.latitude)*PI()*12656/180) * ((#{latitude}-b.latitude)*PI()*12656/180) ) ) as distance
+						from f_meb_basic b,f_meb_wallet w where b.status=1  and b.id=w.user_id
+						) t where  t.type=2
+						
+			<if test="range!=null and range!=''">
+				and t.distance&lt;#{range}
+			</if>
+			
+			<if test="serviceType!=null and serviceType!=''">
+				and EXISTS (select * from f_tenant_scope s where s.user_id=t.id and s.scope_id=#{serviceType})
+			</if>
+	 </select>
+	 
+	<select id="selectTenantList" parameterType="com.block.module.font.guest.guestpublish.web.TenantFilterParm"
+		resultType="com.block.module.font.guest.guestpublish.web.TenantFilterResult">
+			select * from (
+				select b.*, w.times,w.credit, w.opinion,
+						sqrt((((#{longitude}-b.longitude)*PI()*12656*cos(((#{latitude}+b.latitude)/2)*PI()/180)/180) * 
+						((#{longitude}-b.longitude)*PI()*12656*cos (((#{latitude}+b.latitude)/2)*PI()/180)/180) ) + 
+						( ((#{latitude}-b.latitude)*PI()*12656/180) * ((#{latitude}-b.latitude)*PI()*12656/180) ) ) as distance
+						from f_meb_basic b,f_meb_wallet w where b.status=1  and b.id=w.user_id 
+						) t
+					where  t.type=2
+			
+			<if test="range!=null and range!=''">
+				and t.distance &lt; #{range}
+			</if>
+			
+			<if test="serviceType!=null and serviceType!=''">
+				and EXISTS (select * from f_tenant_scope s where s.user_id=t.id and s.scope_id=#{serviceType})
+			</if>
+			
+			<if test="orderBy=='times' or orderBy=='credit' and orderBy=='opinion' or orderBy=='distance'">
+			    order by t.#{orderBy}
+				<if test="sort==1">
+					DESC
+				</if>
+				<if test="sort==0">
+					ASC
+				</if>
+			</if>
+			
+			limit #{pageNo},#{pageSize}
+	 </select>
+</mapper>
+

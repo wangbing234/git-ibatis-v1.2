@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="QuartzJobDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="quartzJobMap" type="com.block.core.module.quartzjob.entity.QuartzJob">
+        	<result property="jobId" column="job_id"/>
+        	<result property="jobDesc" column="job_desc"/>
+        	<result property="beanId" column="bean_id"/>
+        	<result property="methodName" column="method_name"/>
+        	<result property="cronExpression" column="cron_expression"/>
+        	<result property="firstFireTime" column="first_fire_time"/>
+        	<result property="lastFireTime" column="last_fire_time"/>
+        	<result property="fireTimes" column="fire_times"/>
+        	<result property="succTimes" column="succ_times"/>
+        	<result property="isStop" column="is_stop"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="quartzJobColumns">
+	    <![CDATA[
+			job_id,job_desc,bean_id,method_name,cron_expression,first_fire_time,last_fire_time,fire_times,succ_times,is_stop
+	    ]]>
+	</sql>
+</mapper>
+

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件 and  IFNULL(t.startTime,NOW()) &lt;=NOW() 
+  		and  IFNULL(t.endTime,NOW()) &gt;=NOW()  -->
+<mapper namespace="TenantExtendDao">
+
+
+	<!-- 用于list结果集 -->
+	<resultMap id="mebBasicMapInvite" type="com.block.module.font.tenant.tenantextend.web.UserFilterResult">
+        	<result property="id" column="id"/>
+        	<result property="username" column="username"/>
+        	<result property="createtime" column="createtime"/>
+        	<result property="updatetime" column="updatetime"/>
+        	<result property="referer" column="referer"/>
+        	<result property="status" column="status"/>
+        	<result property="type" column="type"/>
+        	<result property="nickname" column="nickname"  jdbcType="BLOB" javaType="java.lang.String" typeHandler="com.block.core.common.ConvertBlobTypeHandler"/>
+        	<result property="qq" column="qq"/>
+        	<result property="weixin" column="weixin"/>
+        	<result property="phone" column="phone"/>
+        	<result property="address" column="address"/>
+        	<result property="longitude" column="longitude"/>
+        	<result property="latitude" column="latitude"/>
+        	<result property="images" column="images"/>
+        	<result property="credit" column="credit"/>
+        	<result property="opinion" column="opinion"/>
+        	<result property="times" column="times"/>
+        	<result property="profile" column="profile"/>
+        	<result property="age" column="age"/>
+        	<result property="heigh" column="heigh"/>
+        	<result property="remark" column="remark"/>
+        	<result property="distance" column="distance"/>
+        	<result property="serviceType" column="serviceType"/>
+	</resultMap>
+
+<!-- 获取用户列表 -->
+	<select id="selectUserCount" parameterType="com.block.module.font.tenant.tenantextend.web.UserFilterParm"
+		resultType="java.lang.Integer">
+			select count(1) as count from (
+								select b.*, w.times,w.credit, w.opinion
+									,sqrt((((#{longitude}-p.longitude)*PI()*12656*cos(((#{latitude}+p.latitude)/2)*PI()/180)/180) * 
+									((#{longitude}-p.longitude)*PI()*12656*cos (((#{latitude}+p.latitude)/2)*PI()/180)/180) ) + 
+									( ((#{latitude}-p.latitude)*PI()*12656/180) * ((#{latitude}-p.latitude)*PI()*12656/180) ) ) 
+								as distance
+								from f_meb_basic b,f_user_publish p ,f_meb_wallet w where b.status=1 and p.id=b.id and p.id=w.user_Id 
+						) t where  1=1
+						
+			<if test="ageUp!=null and ageUp!=''">
+				and t.age &lt;= #{ageUp}
+			</if>
+			<if test="ageDown!=null and ageDown!=''">
+				and t.age &gt;= #{ageDown}
+			</if>
+			<if test="gender!=null and gender!=''">
+				and t.gender = #{gender}
+			</if>
+			<if test="range!=null and range!=''">
+				and t.distance&lt;#{range}
+			</if>
+	 </select>
+	 
+	<select id="selectUserList" parameterType="com.block.module.font.tenant.tenantextend.web.UserFilterParm"
+		resultMap="mebBasicMapInvite">
+			select * from (
+				select b.*, w.times,w.credit, w.opinion,
+						sqrt((((#{longitude}-p.longitude)*PI()*12656*cos(((#{latitude}+p.latitude)/2)*PI()/180)/180) * 
+						((#{longitude}-p.longitude)*PI()*12656*cos (((#{latitude}+p.latitude)/2)*PI()/180)/180) ) + 
+						( ((#{latitude}-p.latitude)*PI()*12656/180) * ((#{latitude}-p.latitude)*PI()*12656/180) ) ) as distance
+						from f_meb_basic b,f_user_publish p ,f_meb_wallet w where b.status=1 and p.id=b.id and p.id=w.user_id 
+						) t
+					where  1=1
+			<if test="ageUp!=null and ageUp!=''">
+				and t.age &lt;= #{ageUp}
+			</if>
+			<if test="ageDown!=null and ageDown!=''">
+				and t.age &gt;= #{ageDown}
+			</if>
+			<if test="gender!=null and gender!=''">
+				and t.gender=#{gender}
+			</if>
+			<if test="range!=null and range!=''">
+				and t.distance&lt;#{range}
+			</if>
+			
+			<if test="orderBy=='times' or orderBy=='credit' and orderBy=='opinion' or orderBy=='distance'">
+			    order by t.#{orderBy}
+				<if test="sort==1">
+					DESC
+				</if>
+				<if test="sort==0">
+					ASC
+				</if>
+			</if>
+			
+			limit #{pageNo},#{pageSize}
+	 </select>
+	 
+	   
+	     
+	    
+	   
+	 
+	 	<!-- 用于list结果集 -->
+	<resultMap id="guestPublishResultMap" type="com.block.module.font.tenant.tenantextend.entity.GuestOrdersResult">
+        	<result property="id" column="id"/>
+        	<result property="number" column="number"/>
+        	<result property="status" column="status"/>
+        	<result property="createtime" column="createtime"/>
+        	<result property="serviceType" column="service_type"/>
+        	<result property="tenantId" column="tenant_id"/>
+        	<result property="tenantPublishId" column="tenant_publish_id"/>
+        	<result property="guestId" column="guest_id"/>
+        	<result property="pricePaid" column="price_paid"/>
+        	<result property="priceTotal" column="price_total"/>
+        	<result property="finishTime" column="finish_time"/>
+        	<result property="payTime" column="pay_time"/>
+        	<!-- 额外字段 -->
+        	<result property="username" column="username"/>
+        	<result property="nickname" column="nickname"  jdbcType="BLOB" javaType="java.lang.String" typeHandler="com.block.core.common.ConvertBlobTypeHandler"/>
+        	<result property="profile" column="profile"/>
+        	<result property="phone" column="phone"/>
+	 </resultMap>
+	 
+	 
+	 
+	 <!-- 获取客户预定列表 -->
+	 
+	 
+	 <select id="selectGuestOrderList" parameterType="com.block.module.font.tenant.tenantextend.entity.GuestOrderParms"
+		resultMap="guestPublishResultMap">
+			select p.*,b.username,b.nickname,b.phone,b.profile from f_guest_publish p LEFT JOIN f_meb_basic b on 
+			p.guest_id=b.id where p.tenant_id=#{tenantId}  order by p.createtime DESC
+			limit #{pageNo},#{pageSize}
+	 </select>
+	 
+	 <select id="selectGuestOrderCount" parameterType="com.block.module.font.tenant.tenantextend.entity.GuestOrderParms"
+		resultType="java.lang.Integer">
+			select count(*) from f_guest_publish p where p.tenant_id=#{tenantId} 
+	 </select>
+</mapper>
+

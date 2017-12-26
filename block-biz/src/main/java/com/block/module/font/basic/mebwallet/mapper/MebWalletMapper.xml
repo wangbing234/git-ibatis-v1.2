@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="MebWalletDao">
+
+	<update id="updateOpinion" parameterType="java.lang.Integer">
+		update f_meb_wallet w set w.opinion = (select  ifnull(avg(t.opinion),5)   from f_meb_comment t where  t.user_id=#{userId})
+		where w.user_id=#{userId}
+	</update>
+</mapper>
+

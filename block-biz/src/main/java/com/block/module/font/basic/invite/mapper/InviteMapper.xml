@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="InviteDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="inviteMap" type="com.block.module.font.basic.invite.entity.InviteResult">
+        	<result property="id" column="id"/>
+        	<result property="status" column="status"/>
+        	<result property="userId" column="user_id"/>
+        	<result property="type" column="type"/>
+        	<result property="tenantId" column="tenant_id"/>
+        	<result property="publishId" column="publish_id"/>
+        	<result property="remark" column="remark"/>
+        	<result property="type" column="type"/>
+		    <result property="address" column="address"/>
+		    <result property="price" column="price"/>
+		    <result property="serviceType" column="serviceType"/>
+  			<result property="payType" column="payType"/>
+  			<result property="profile" column="profile"/>
+  			
+  			<result property="phone" column="phone"/>
+        	<result property="name" column="name" jdbcType="BLOB" javaType="java.lang.String" typeHandler="com.block.core.common.ConvertBlobTypeHandler"/>
+        	<result property="createtime" column="createtime"/>
+	</resultMap>
+	
+	
+	
+	
+	<!-- 用户查询商户的邀请 -->
+	<select id="selectUserInviteResult" parameterType="java.util.Map" resultMap="inviteMap">
+		select fi.*,tp.address,tp.deadline,tp.pay_type,tp.price,tp.service_type,fb.phone
+		 from f_invite fi ,f_tenant_publish tp,f_meb_basic fb where fb.id = fi.user_Id and tp.id=fi.publish_id 
+		<if test="status!=null and status!=''">
+				and fi.status = #{status}
+		</if>
+		<if test="userId!=null and userId!=''">
+				and fi.user_Id = #{userId}
+		</if>
+		<if test="tenantId!=null and tenantId!=''">
+				and fi.tenant_Id = #{tenantId}
+		</if>
+		limit #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- count数字 -->
+	<select id="selectUserInviteCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from f_invite fi ,f_tenant_publish tp  where tp.id=fi.publish_id 
+		<if test="status!=null and status!=''">
+				and fi.status = #{status}
+		</if>
+		<if test="userId!=null and userId!=''">
+				and fi.user_Id = #{userId}
+		</if>
+		<if test="tenantId!=null and tenantId!=''">
+				and fi.tenant_Id = #{tenantId}
+		</if>
+	</select>
+	
+	
+	
+	
+	<!-- 商户的查询 -->
+	<select id="selectTenantInviteResult" parameterType="java.util.Map" resultMap="inviteMap">
+		select fi.*,fb.nickname as nickname ,fb.phone from f_invite fi ,f_meb_basic fb where fb.id = fi.user_Id
+		
+		<if test="status!=null and status!=''">
+				and fi.status = #{status}
+		</if>
+		<if test="userId!=null and userId!=''">
+				and fi.user_Id = #{userId}
+		</if>
+		<if test="tenantId!=null and tenantId!=''">
+				and fi.tenant_Id = #{tenantId}
+		</if>
+		limit #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- count数字 -->
+	<select id="selectTenantInviteCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from f_invite fi ,f_meb_basic fb where fb.id = fi.user_Id 
+		<if test="status!=null and status!=''">
+				and fi.status = #{status}
+		</if>
+		<if test="userId!=null and userId!=''">
+				and fi.user_Id = #{userId}
+		</if>
+		<if test="tenantId!=null and tenantId!=''">
+				and fi.tenant_Id = #{tenantId}
+		</if>
+	</select>
+</mapper>
+

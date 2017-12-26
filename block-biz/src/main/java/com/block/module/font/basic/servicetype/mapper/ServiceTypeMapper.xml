@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="ServiceTypeDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="serviceTypeMap" type="com.block.module.font.basic.servicetype.entity.ServiceType">
+        	<result property="id" column="id"/>
+        	<result property="type" column="type"/>
+        	<result property="name" column="name"/>
+        	<result property="price" column="price"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="serviceTypeColumns">
+	    <![CDATA[
+			id,type,name,price
+	    ]]>
+	</sql>
+</mapper>
+

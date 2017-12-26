@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="PrivilegeDao">
+
+	<resultMap id="RM_Privilege" type="com.block.core.module.privilege.entity.PrivilegeModel">
+        <result property="id" column="id"/>
+        <result property="rid" column="rid"/>
+        <result property="mid" column="mid"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Privilege_columns">
+	    <![CDATA[
+		id,rid,mid
+	    ]]>
+	</sql>
+</mapper>
+

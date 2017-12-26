@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="MebWalletFreezeDao">
+
+	<!--   查询有解冻资金的账号  -->
+	 <select id="selectUserCount" resultType="com.block.module.font.basic.mebwallet.entity.MebWallet">
+	 		select w.* from meb_wallet w where w.stop='n' and freeze>0
+	 </select>
+</mapper>
+

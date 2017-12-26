@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="TenantUserMatchDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="tenantUserMatchMapResult" type="com.block.module.font.tenant.tenantusermatch.entity.TenantUserMatchResult">
+        	<result property="id" column="id"/>
+        	<result property="status" column="status"/>
+        	<result property="priceCal" column="price_cal"/>
+        	<result property="pricePaid" column="price_paid"/>
+        	<result property="priceTotal" column="price_total"/>
+        	<result property="userId" column="user_id"/>
+        	<result property="tenantId" column="tenant_id"/>
+        	<result property="userPublishId" column="user_publish_id"/>
+        	<result property="tenantPublishId" column="tenant_publish_id"/>
+        	<result property="payMethod" column="pay_method"/>
+        	<result property="payType" column="pay_type"/>
+        	<result property="inMember" column="in_member"/>
+        	<result property="initType" column="init_type"/>
+        	<result property="serviceType" column="service_type"/>
+        		<!-- 额外字段 -->
+        	<result property="nickname" column="nickname"  jdbcType="BLOB" javaType="java.lang.String" typeHandler="com.block.core.common.ConvertBlobTypeHandler"/>
+        	<result property="profile" column="profile"/>
+        	<result property="phone" column="phone"/>
+	</resultMap>
+	
+	 <!-- 获取客户预定列表  p.in_member=1 and-->
+	 <select id="selectUserMatchList" parameterType="com.block.module.font.tenant.tenantusermatch.entity.TenantUserMatchParms"
+		resultMap="tenantUserMatchMapResult">
+			select p.*,b.nickname,b.phone,b.profile from f_tenant_user_match p LEFT JOIN f_meb_basic b on
+			p.user_id=b.id 
+			where   p.tenant_publish_id=#{tenantPublishId}  order by p.id DESC
+	 </select>
+	 
+	 
+</mapper>
+

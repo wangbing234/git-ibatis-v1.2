@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="RoleDao">
+
+	<resultMap id="RM_Role" type="com.block.core.module.role.entity.RoleModel">
+        <result property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDesc" column="role_desc"/>
+        <result property="roleDbPrivilege" column="role_dbPrivilege"/>
+        <result property="status" column="status"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Role_columns">
+	    <![CDATA[
+		id,role_name,role_desc,role_dbPrivilege,status
+	    ]]>
+	</sql>
+</mapper>
+

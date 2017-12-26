@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="OrdermentDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="ordermentMap" type="com.block.module.font.basic.orderment.entity.Orderment">
+        	<result property="id" column="id"/>
+        	<result property="orderNo" column="order_no"/>
+        	<result property="type" column="type"/>
+        	<result property="busiId" column="busi_id"/>
+        	<result property="status" column="status"/>
+        	<result property="amount" column="amount"/>
+        	<result property="createtime" column="createtime"/>
+        	<result property="returnCode" column="return_code"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="ordermentColumns">
+	    <![CDATA[
+			id,order_no,type,busi_id,status,amount,createtime,return_code
+	    ]]>
+	</sql>
+</mapper>
+

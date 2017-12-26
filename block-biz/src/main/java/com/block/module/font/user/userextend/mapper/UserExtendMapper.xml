@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--  SET @beginDate='2017-07-01';
+SET @maxDate ='2017-07-19';
+SELECT DATE(@tempDay),@tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY)
+FROM u_login_log f #该表是系统上已存在的一个有比较多数据的表
+LEFT JOIN (SELECT @tempDay:=@beginDate) b  ON 1=1
+WHERE @tempDay<=@maxDate mybatis的SQL配置文件  -->
+<mapper namespace="UserExtendDao">
+
+ 
+
+</mapper>
+

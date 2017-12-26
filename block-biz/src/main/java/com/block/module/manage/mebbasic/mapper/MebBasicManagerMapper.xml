@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="MebBasicManagerDao">
+
+	 	
+	<!-- 用户数据汇总总数-->
+	<select id="staticOrderAmount"  resultType="map">
+	     	SELECT 'userRegister' as code,   count(1) name from f_meb_basic where type=1
+	    	 UNION ALL
+			SELECT 'tenantRegister' , count(1)   from f_meb_basic where type=2
+	   		 UNION ALL
+			SELECT 'guestRegister' ,  count(1)   from f_meb_basic where type=3
+	    	 UNION ALL
+			SELECT 'successUserOrderAmount', IFNULL(sum(price_total),0)  from f_tenant_user_match where `status` in(6,9)
+				UNION ALL
+  			SELECT  'successUserOrderCount', count(1)   from f_tenant_user_match where `status` in(6,9)
+				UNION ALL
+			SELECT  'allUserOrderAmount',count(1)  from f_tenant_user_match
+				UNION ALL
+			select 'allTenantOrderCount',count(1) from f_tenant_publish
+				UNION ALL
+			SELECT 'allGuestOrderCount',count(1) from  f_guest_publish
+	</select>
+	
+	
+		<!-- 用户数据汇总总数-->
+	<select id="staticOrderDay"  resultType="map" statementType="STATEMENT">
+	 <![CDATA[  
+	     	   SELECT @tempDay, @tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY) FROM s_login_log f 
+ LEFT JOIN (SELECT @tempDay:='2017-07-01') b  ON 1=1 WHERE @tempDay<='2017-07-19'
+	 ]]>
+	</select>
+	
+	<!-- 用户数据汇总总数-->
+	<select id="staticStaticOrderDayCount" resultType="java.lang.Integer" parameterType="com.block.module.manage.mebbasic.entity.StaticDayParms">
+			<![CDATA[  
+			select COUNT(1) as count from (  SELECT @tempDay, @tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY) FROM s_login_log f 
+									 LEFT JOIN (SELECT @tempDay:=#{startDate}) b  ON 1=1 WHERE @tempDay<=#{endDate} ) t
+						  ]]>
+	</select>
+	
+	<!-- 用户数据汇总总数Select A.Name from A LEFT  JOIN B ON A.id =B.id-->
+	<select id="staticStaticOrderDayList"   resultType="com.block.module.manage.mebbasic.entity.StaticDayResult" parameterType="com.block.module.manage.mebbasic.entity.StaticDayParms">
+		<![CDATA[  
+	 Select E.*,F.* from ( Select C.*,D.* from ( Select A.cur_day,B.* from ( SELECT @tempDay as cur_day, @tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY)  FROM s_login_log f 
+		LEFT JOIN (SELECT @tempDay:=#{startDate}) b  ON 1=1 WHERE @tempDay<=#{endDate} )A 
+					LEFT  JOIN ( SELECT  DATE_FORMAT(fb.createtime,'%Y-%m-%d') as dayb , 
+	 			     sum(IF(fb.type=1,1,0)) userCount,sum(IF(fb.type=2,1,0)) tenantCount,sum(IF(fb.type=3,1,0)) guestCount 	from f_meb_basic fb  GROUP BY dayb)B ON A.cur_day =B.dayb )C
+					 LEFT  JOIN (  SELECT DATE_FORMAT(um.pay_time,'%Y-%m-%d') as dayd,
+											sum(IF((um.status=6||um.status=9),1,0)) 'userOrderSuccessCount',
+											sum(IF((um.status=6||um.status=9),um.price_total,0)) 'orderSuccessAmount',
+											sum(IF(um.status != null,1,0)) 'userOrderCount'
+										from f_tenant_user_match um GROUP BY dayd  )D ON C.cur_day =D.dayd )E LEFT JOIN (SELECT DATE_FORMAT(gp.createtime,'%Y-%m-%d') dayf,count(1) 'guestOrderCount' from f_guest_publish gp GROUP BY dayf)F 
+					ON E.cur_day =F.dayf order by e.cur_day ASC
+					limit #{pageNo},#{pageSize}
+			 ]]>
+	</select>
+ 
+</mapper>
+
+
+<!--  SET @beginDate='2017-07-01';
+SET @maxDate ='2017-07-19';
+SELECT DATE(@tempDay),@tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY)
+FROM u_login_log f #该表是系统上已存在的一个有比较多数据的表
+LEFT JOIN (SELECT @tempDay:=@beginDate) b  ON 1=1
+WHERE @tempDay<=@maxDate mybatis的SQL配置文件  
+
+
+原始sql
+
+ Select E.*,F.* from ( Select C.*,D.* from ( Select A.cur_day,B.* from ( SELECT @tempDay:=DATE_ADD(@tempDay,INTERVAL 1 DAY) as cur_day FROM s_login_log f 
+		LEFT JOIN (SELECT @tempDay:='2017-07-01') b  ON 1=1 WHERE @tempDay<='2017-07-19' )A 
+					LEFT  JOIN ( SELECT  DATE_FORMAT(fb.createtime,'%Y-%m-%d') as dayb , 
+	 			     sum(IF(fb.type=1,1,0)) userCount,sum(IF(fb.type=2,1,0)) tenantCount,sum(IF(fb.type=3,1,0)) guestCount 	from f_meb_basic fb  GROUP BY dayb)B ON A.cur_day =B.dayb )C
+					 LEFT  JOIN (  SELECT DATE_FORMAT(um.pay_time,'%Y-%m-%d') as dayd,
+											sum(IF((um.status=6||um.status=9),1,0)) 'userOrderSuccessCount',
+											sum(IF((um.status=6||um.status=9),um.price_total,0)) 'orderSuccessAmount',
+											sum(IF(um.status != null,1,0)) 'userOrderCount'
+										from f_tenant_user_match um GROUP BY dayd  )D ON C.cur_day =D.dayd )E LEFT JOIN (SELECT DATE_FORMAT(gp.createtime,'%Y-%m-%d') dayf,count(1) 'guestOrderCount' from f_guest_publish gp GROUP BY dayf)F 
+					ON E.cur_day =F.dayf
+
+
+-->
+

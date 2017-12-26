@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!--   mybatis的SQL配置文件  -->
+<mapper namespace="SystemlogDao">
+
+	<!-- 用于list结果集 -->
+	<resultMap id="systemlogMap" type="com.block.core.module.systemlog.entity.Systemlog">
+        	<result property="id" column="id"/>
+        	<result property="title" column="title"/>
+        	<result property="content" column="content"/>
+        	<result property="type" column="type"/>
+        	<result property="account" column="account"/>
+        	<result property="loginIp" column="loginIP"/>
+        	<result property="logintime" column="logintime"/>
+        	<result property="loginArea" column="loginArea"/>
+        	<result property="diffAreaLogin" column="diffAreaLogin"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="systemlogColumns">
+	    <![CDATA[
+			id,title,content,type,account,loginIP,logintime,loginArea,diffAreaLogin
+	    ]]>
+	</sql>
+</mapper>
+
